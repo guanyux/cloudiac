@@ -1,4 +1,52 @@
 ------
+## v0.9.0-rc1 20220118
+#### Features
+- 合规策略组改用代码库进行管理，支持通过分支或 tag 来管理版本
+- 重新实现的合规检测流程和检测引擎
+- 执行界面增加云模板和环境的合规开关和合规策略组绑定功能
+- 新增合规管理员角色
+- 环境部署历史增加触发类型字段，记录部署任务的触发来源
+- 新增环境搜索功能，支持通过环境名称和云模板名称进行搜索
+- 云模板新增 ssh 密钥配置
+- 新增 iac registry 地址配置，环境变量 REGISTRY_ADDRESS
+- 新增支持添加 iac registry 中发布的合规策略组 
+- 增加 DOCKER_REGISTRY 环境变量配置，允许自定义 docker registry 地址
+
+#### Enhancements
+- 优化 vcs 服务报错，将 vcs 错误进一步细分为连接错误、认证错误等
+
+#### Changes
+- 项目云模板列表的“活跃环境”字段改为关联环境，点击数字可跳转到环境列表页面
+
+#### Fxies
+- 修复部分查询未正常处理软删除的问题
+- 修复 runner 未处理非 32 位 secretKey 的问题
+- 修复 command 步骤 cd 目录失效的问题
+- 修复 local vcs 创建的云模板，仓库地址显示错误的问题
+
+#### 升级步骤
+**升级前注意备份数据**
+
+**SQL 更新:**
+```sql
+-- 合规数据清理
+DROP TABLE `iac_policy`;
+DROP TABLE `iac_policy_group`;
+DROP TABLE `iac_policy_rel`;
+DROP TABLE `iac_policy_result`;
+DROP TABLE `iac_policy_suppress`;
+DROP TABLE `iac_scan_task`;
+
+-- 清空last_scan_task_id
+UPDATE `iac_env` SET `last_scan_task_id` = '';
+UPDATE `iac_template` SET `last_scan_task_id` = ''; 
+
+-- 确保字段格式
+ALTER TABLE `iac_task` CHANGE `message` `message` text CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+ALTER TABLE `iac_user_org` CHANGE `role` `role` enum('admin','member','complianceManager');
+```
+
+------
 ## v0.8.1 20211214
 #### Fixes
 - 修复新组织中创建环境时接口报错的问题
