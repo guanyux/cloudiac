@@ -181,6 +181,7 @@ func PopulateViolateSource(scanner *Scanner, res Resource, task *models.ScanTask
 			_ = json.Unmarshal(tfmapContent, &tfmap)
 		}
 	}
+
 	for idx, policyResult := range resultJson.Results.Violations {
 		resLineNo := policyResult.Line
 		srcFile := policyResult.File
