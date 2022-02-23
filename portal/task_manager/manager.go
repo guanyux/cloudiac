@@ -823,7 +823,8 @@ func (m *TaskManager) runTaskStep(
 			err = errors.Wrapf(err, "get task step %s", string(step.NextStep))
 			return err
 		} else if nextStep.MustApproval {
-			taskReq.PauseTask = true
+			// TODO 临时停用容器暂停特性
+			taskReq.PauseTask = false
 		}
 	}
 
@@ -1368,7 +1369,8 @@ func (m *TaskManager) runScanTaskStep(ctx context.Context, taskReq runner.RunTas
 			err = errors.Wrapf(err, "get task step %s", string(step.NextStep))
 			return err
 		} else if nextStep.MustApproval {
-			taskReq.PauseTask = true
+			// TODO 临时停用容器暂停特性
+			taskReq.PauseTask = false
 		}
 	}
 
